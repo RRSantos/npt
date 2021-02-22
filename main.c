@@ -54,20 +54,22 @@ int main(int argc, char** argv){
 
     cli_param p; 
     bind_param(&p,argc, argv);
-    char* my_dir;
-    read_configuration(&my_dir);
+    char* base_path;
+    read_configuration(&base_path);
     printf("Creating project template...\n");
     show_input_params(p);
     int create_result;
-    create_result = create_project_template(my_dir, p);
-    free_param(&p);
+    create_result = create_project_template(base_path, p);
 
     if (create_result != 0){
         fprintf(stderr,"Errors creating project template. See errors above.\n");
     }
     else{
-        printf("Project template successfullu created!\n");
+        printf("Project template successfully created!\n");
     }
     return create_result;
+
+    free_param(&p);
+    free(base_path);
 }
 
