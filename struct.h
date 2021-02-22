@@ -5,6 +5,7 @@ typedef struct params{
     char* ProjectName;
     char* ProjectType;
     char* Language;
+    char* DestinationDir;
 } cli_param;
 
 #endif

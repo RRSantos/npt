@@ -5,7 +5,7 @@
 
 void get_value_from_string(const char* string, const char* prefix, char ** result);
 void read_configuration(char **base_path);
-void create_project_template(const char* base_path, cli_param p);
+int create_project_template(const char* base_path, cli_param p);
 
 #endif
 

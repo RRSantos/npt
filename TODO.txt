@@ -1,0 +1,4 @@
+TODO:
+1. New input param to inform taget path (to create the project files)
+2. Replace 'tokens' inside every file on de 'template' directory
+3. Improve configuration file and options
