@@ -45,31 +45,33 @@ void show_usage(){
 }
 
 int main(int argc, char** argv){
-
+    int result = 0;
     if (argc < PARAM_COUNT){
         fprintf(stderr,ERROR_PARAM_COUNT, PARAM_COUNT-1, argc);
         show_usage();
-        return -1;
+        result = -1;
     }
+    else{
+        cli_param p; 
+        bind_param(&p,argc, argv);
+        char* base_path = malloc(MAX_BASE_PATH_CONFIG_SIZE*sizeof(char));
+        result = read_configuration(base_path);
 
-    cli_param p; 
-    bind_param(&p,argc, argv);
-    char* base_path;
-    read_configuration(&base_path);
-    printf("Creating project template...\n");
-    show_input_params(p);
-    int create_result;
-    create_result = create_project_template(base_path, p);
-
-    if (create_result != 0){
+        if (result == 0){
+            printf("Creating project template...\n");
+            show_input_params(p);
+            result = create_project_template(base_path, p);
+        }
+        free_param(&p);
+        free(base_path);
+    }
+    if (result != 0){
         fprintf(stderr,"Errors creating project template. See errors above.\n");
     }
     else{
         printf("Project template successfully created!\n");
     }
-    return create_result;
+    return result;
 
-    free_param(&p);
-    free(base_path);
 }
 

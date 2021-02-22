@@ -3,6 +3,7 @@
 
 const char* ERROR_PARAM_COUNT = "Invalid number of arguments. (Expected: %d; Actual: %d)\n";
 const int PARAM_COUNT = 4;
+const size_t MAX_BASE_PATH_CONFIG_SIZE = 1024;
 
 char* CONFIG_FILE = "npt.config";
 char* DEFAULT_BASE_PATH = "~/.config/npt/templates/";

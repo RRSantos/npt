@@ -14,6 +14,7 @@ extern char* MESSAGE_ERROR_OPENING_SOURCE ;
 extern char* MESSAGE_ERROR_CREATING_DESTINATION;
 extern char* MESSAGE_ERROR_READING_DIR;
 extern char* MESSAGE_ERROR_CREATING_DIR;
+extern size_t MAX_BASE_PATH_CONFIG_SIZE;
 
 void remove_line_ending(char *input_string){
     int size_s = strlen(input_string);
@@ -25,26 +26,34 @@ void remove_line_ending(char *input_string){
     }
 
 }
-void get_value_from_string(const char string[], const char* prefix, char ** result){
-    char * found_ptr = strstr(string,prefix);
+void get_value_from_string(const char string[], const char *prefix, char *result){
+    char *found_ptr = strstr(string,prefix);
     if (found_ptr != NULL){
         int pos = found_ptr[0] - string[0] + strlen(prefix);
-        *result = strndup(&string[pos], strlen(string) - pos - 1);
+        strncpy(result, &string[pos], strlen(string) - pos - 1);
+        //*result = strndup(&string[pos], strlen(string) - pos - 1);
     }
 }
 
-void read_configuration(char **base_path){
+int read_configuration(char *base_path){
     FILE* f = fopen(CONFIG_FILE, "r");
     if (f == NULL){
-        *base_path = strdup(DEFAULT_BASE_PATH); 
+        strncpy(base_path, DEFAULT_BASE_PATH, MAX_BASE_PATH_CONFIG_SIZE); 
     }
     else{
-        char buf[1024] = {0} ;
-        fread(buf, 1, sizeof(buf), f);
+        char *buf = malloc((MAX_BASE_PATH_CONFIG_SIZE+1)*sizeof(char));
+        if (buf == NULL){
+            fprintf(stderr, "Could not allocate sufficient memory.");
+            return -1;
+        }
+        fread(buf, MAX_BASE_PATH_CONFIG_SIZE, 1, f);
         remove_line_ending(buf);
         get_value_from_string(buf,CONFIG_PARAM_BASE_PATH, base_path); 
         fclose(f);
+        free(buf);
     }
+
+    return 0;
 }
 
 int copy_file(char source[], char destination[]){
